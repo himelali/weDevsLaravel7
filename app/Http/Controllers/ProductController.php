@@ -24,7 +24,7 @@ class ProductController extends Controller
      */
     public function index(Request $request)
     {
-        list($sort, $type, $query, $item) = getParams($request,'title,created_at,price');
+        list($sort, $type, $query, $item) = getParams($request,'title,price,created_at');
         $products = Product::select(['id','title','price','description','created_at'])
             ->when($query, function ($sql) use ($query) {
                 $sql->where('title', 'LIKE', "%$query%")
@@ -72,7 +72,7 @@ class ProductController extends Controller
     public function update(Request $request, Product $product)
     {
         $values = $request->validate([
-            'title' => 'required|string|min:4|max:100|unique:'.Product::getTableName(),',title,'.$product->id,
+            'title' => 'required|string|min:4|max:100|unique:'.Product::getTableName().',title,'.$product->id,
             'price' => 'required|numeric|min:0|max:999999',
             'description' => 'nullable|string|min:2|max:999',
             'file' => 'nullable|image|mimes:jpg,jpeg,png|min:10|max:4096'
@@ -92,6 +92,9 @@ class ProductController extends Controller
     {
         try {
             $product->delete();
+            if($product->image) {
+                fileDelete($product->image);
+            }
             return response()->json([
                 'success' => $product->title . ' has been deleted'
             ],Response::HTTP_NO_CONTENT);
