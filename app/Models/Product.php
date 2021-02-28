@@ -21,14 +21,31 @@ class Product extends Model
     ];
 
     /**
+     * The attributes that are created.
+     *
+     * @var array
+     */
+	protected $appends = [
+	    'file_url'
+    ];
+
+    /**
      * @param string $ext
      * @return string
      */
-    public static function getUniqueImageName($ext = 'jpg') {
-	    $name = uniqid();
-	    if(static::where('image','%LIKE%',$name)->exists()) {
+    public static function getUniqueImageName($ext = 'jpg')
+    {
+	    $name = uniqid().rand(1000,9999);
+	    if(static::where('image','%LIKE%',$name)->exists())
 	       self::getUniqueImageName($ext);
-        }
         return Str::lower($name.'.'.$ext);
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getFileUrlAttribute()
+    {
+        return $this->image ? asset('storage/'.$this->image) : null;
     }
 }
