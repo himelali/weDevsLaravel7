@@ -15,7 +15,7 @@ class ProductController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['index','show']]);
+        $this->middleware('auth:api');
     }
 
     /**
@@ -25,7 +25,7 @@ class ProductController extends Controller
     public function index(Request $request)
     {
         list($sort, $type, $query, $item) = getParams($request,'title,price,created_at');
-        $products = Product::select(['id','title','price','description','created_at'])
+        $products = Product::select(['id','title','price','image','description','created_at'])
             ->when($query, function ($sql) use ($query) {
                 $sql->where('title', 'LIKE', "%$query%")
                     ->orWhere('price', 'LIKE', "%$query%")

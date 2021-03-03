@@ -51,7 +51,11 @@ if(!function_exists('fileUpload')) {
     function fileUpload(UploadedFile $file, Product $product = null)
     {
         $name = Product::getUniqueImageName($file->getClientOriginalExtension());
-        Storage::disk('public')->put($name, Image::make($file));
+        $resize = Image::make($file)->resize(600, null, function ($constraint) {
+            $constraint->aspectRatio();
+        })->encode('jpg');
+
+        Storage::disk('public')->put($name, $resize->__toString());
         if($product != null && $product->image != null) {
             fileDelete($product->image);
         }

@@ -26,7 +26,7 @@ Route::prefix('auth')->group(function () {
     Route::post('/me', 'AuthController@me');
 });
 
-Route::prefix('product')->group(function () {
+Route::prefix('products')->group(function () {
     Route::get('/', 'ProductController@index');
     Route::post('/create', 'ProductController@store');
     Route::get('/{product}', 'ProductController@show');
