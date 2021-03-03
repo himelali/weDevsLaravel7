@@ -19,6 +19,15 @@ class Product extends Model
 	protected $fillable = [
 	    'id','title','description','price','image'
     ];
+    
+    /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = [
+        'image'
+    ];
 
     /**
      * The attributes that are created.
